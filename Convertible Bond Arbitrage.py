@@ -19,19 +19,26 @@ for t in range(1, 2 * maturity + 1):
 bond_value += face_value / (1 + risk_free_rate) ** maturity
 
 import math
-#Calculate fair proce of option
+#Calculate fair price of option                         ## THIS BIT HAS TO BE REPLACED. NEED SMTH FOR CONVERTIBLE BONDS
 # Function to calculate Black-Scholes d1 and d2
 def calculate_d1_d2(stock_price, conversion_price, risk_free_rate, maturity, volatility):
     d1 = (math.log(stock_price / conversion_price) + (risk_free_rate + (volatility ** 2) / 2) * maturity) / (volatility * math.sqrt(maturity))
     d2 = d1 - volatility * math.sqrt(maturity)
     return d1, d2
-
+       
 # Calculate d1 and d2 using the function
 d1, d2 = calculate_d1_d2(stock_price, conversion_price, risk_free_rate, maturity, volatility)
+
+                                                    
 
 from scipy.stats import norm
 # Calculate the call option value using Black-Scholes formula
 call_option_value = stock_price * math.exp(-risk_free_rate * maturity) * norm.cdf(d1) - conversion_price * norm.cdf(d2)
+
+
+
+                                                        ########
+
 
 fair_value_convertible_bond = bond_value + call_option_value
 
