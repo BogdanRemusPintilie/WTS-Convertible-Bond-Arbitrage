@@ -1,6 +1,6 @@
 import math
 from scipy.stats import norm
-#from xbbg import blp #has to be connected to Bloomberg otherwise error
+#from xbbg import blp
 import pandas as pd
 from datetime import datetime
 
@@ -22,12 +22,12 @@ for index, row in df.iterrows():
     maturity= (maturity_date - formated_current_date).days / 365
     
     conversion_ratio = row["Conversion Ratio"]
-    stock_price =  100 #blp.bdp("MSFT US Equity", ["Security Name", "px_last"])['px_last'].values[0]
-    risk_free_rate =  0.01 #blp.bdp("USGG10YR", ["px_last"])["px_last"].values[0]
+    stock_price =  100 #blp.bdp(ticker "US Equity", ["px_last"])['px_last'].values[0]
+    risk_free_rate =  0.01 #blp.bdp("USGG10YR Index", ["px_last"])["px_last"].values[0]    ## It is actually px_last, stupid, is what it is
     face_value = 1000
     conversion_price = row["CV Conversion Price"]
-    volatility = row["CV Stock Volatility"]
-    market_value=200 #this must be live data from Bloomberg
+    volatility = row["CV Stock Volatility"] #should be live data
+    market_value = 200 #blp.bdp("ticker", ['px_last'])['px_last'].values[0]
 
     def calculate_bond_value(face_value, coupon_rate, risk_free_rate, maturity):
         coupon_payment = coupon_rate * face_value / 2
