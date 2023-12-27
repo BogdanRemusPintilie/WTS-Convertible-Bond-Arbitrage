@@ -19,11 +19,13 @@ for index, row in df.iterrows():
     coupon_rate = row["Cpn"]
 
     maturity_date = datetime.strptime(row["Maturity"], "%d-%m-%y")
-    maturity= (maturity_date - formated_current_date).days / 365
+    maturity = (maturity_date - formated_current_date).days / 365
+    if maturity<=0:
+        maturity=0.1 #got math errors sayin I divide by 0 and filtered out for volatility so it must be maturity but I have no clue how I get anything <=0 to be honest
     
     conversion_ratio = row["Conversion Ratio"]
-    stock_price =  100 #blp.bdp(ticker "US Equity", ["px_last"])['px_last'].values[0]
-    risk_free_rate =  0.01 #blp.bdp("USGG10YR Index", ["px_last"])["px_last"].values[0]    ## It is actually px_last, stupid, is what it is
+    stock_price = 100 #blp.bdp(ticker + " US Equity", ["px_last"])['px_last'].values[0]
+    risk_free_rate = 0.1 #blp.bdp("USGG10YR Index", ["px_last"])["px_last"].values[0]    ## It is actually px_last, stupid, is what it is
     face_value = 1000
     conversion_price = row["CV Conversion Price"]
     volatility = row["CV Stock Volatility"] #should be live data
@@ -38,8 +40,8 @@ for index, row in df.iterrows():
         return bond_value
 
     def calculate_call_option_value(stock_price, conversion_price, risk_free_rate, maturity, volatility):
-        d1 = (math.log(stock_price / conversion_price) + (risk_free_rate + (volatility ** 2) / 2) * maturity) / volatility  #*math.sqrt(maturity))
-        d2 = d1 - volatility #* math.sqrt(maturity)
+        d1 = (math.log(stock_price / conversion_price) + (risk_free_rate + (volatility ** 2) / 2) * maturity) / (volatility * math.sqrt(maturity))
+        d2 = d1 - volatility * math.sqrt(maturity)
         call_option_value = stock_price * math.exp(-risk_free_rate * maturity) * norm.cdf(d1) - conversion_price * norm.cdf(d2)
         return call_option_value
 
