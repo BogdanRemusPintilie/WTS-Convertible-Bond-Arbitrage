@@ -1,15 +1,15 @@
 import math
 from scipy.stats import norm
-#from xbbg import blp
+from xbbg import blp
 import pandas as pd
 from datetime import datetime
 
 tickers=[]
 current_date= datetime.now()
-formated_current_date=current_date.strftime("%d-%m-%y")
-formated_current_date=datetime.strptime(formated_current_date, "%d-%m-%y")
+formated_current_date=current_date.strftime("%d/%m/%Y")
+formated_current_date=datetime.strptime(formated_current_date, "%d/%m/%Y")
 
-data = r"C:\Users\Bogdan\Desktop\CLEAN\WTS\Convertible bond arbitrage\cleaned_data.csv"
+data = r"\cleaned_data.csv"
 
 df = pd.read_csv(data)
 
@@ -18,18 +18,18 @@ for index, row in df.iterrows():
     ticker= row["Ticker"]
     coupon_rate = row["Cpn"]
 
-    maturity_date = datetime.strptime(row["Maturity"], "%d-%m-%y")
+    maturity_date = datetime.strptime(row["Maturity"], "%d/%m/%Y")
     maturity = (maturity_date - formated_current_date).days / 365
     if maturity<=0:
         maturity=0.1 #got math errors sayin I divide by 0 and filtered out for volatility so it must be maturity but I have no clue how I get anything <=0 to be honest
     
     conversion_ratio = row["Conversion Ratio"]
     stock_price = 100 #blp.bdp(ticker + " US Equity", ["px_last"])['px_last'].values[0]
-    risk_free_rate = 0.1 #blp.bdp("USGG10YR Index", ["px_last"])["px_last"].values[0]    ## It is actually px_last, stupid, is what it is
+    risk_free_rate = blp.bdp("USGG10YR Index", ["px_last"])["px_last"].values[0]    ## It is actually px_last, stupid, is what it is
     face_value = 1000
     conversion_price = row["CV Conversion Price"]
-    volatility = row["CV Stock Volatility"] #should be live data
-    market_value = 200 #blp.bdp("ticker", ['px_last'])['px_last'].values[0]
+    volatility = row["CV Stock Volatility"] #should be live data??
+    market_value = 200 #blp.bdp(ticker + "the full name of the CB", ['px_last'])['px_last'].values[0]
 
     def calculate_bond_value(face_value, coupon_rate, risk_free_rate, maturity):
         coupon_payment = coupon_rate * face_value / 2
