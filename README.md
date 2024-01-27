@@ -10,6 +10,6 @@ I might have messed up the maturity so I commented it out of the code, so make s
 
 Rest can be seen in comments.
 
-The cleaned_data.csv comes from Bloomberg.
+The data.csv comes from Bloomberg.
 
 Good luck!
