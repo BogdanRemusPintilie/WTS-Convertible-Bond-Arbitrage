@@ -13,3 +13,5 @@ The rest can be seen in the comments.
 The data.csv comes from Bloomberg.
 
 Good luck!
+
+Bogdan
